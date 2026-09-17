@@ -3,9 +3,9 @@ package main
 func cleanInput(text string) []string {
 	var result []string
 	var temp string
-	for i, character := range text {
-		if string(text[i]) == " " {
-			if len(temp) >= 1 {
+	for _, character := range text {
+		if string(character) == " " {
+			if len(temp) > 1 {
 				result = append(result, temp)
 				temp = ""
 			}
@@ -13,5 +13,10 @@ func cleanInput(text string) []string {
 		}
 		temp = temp + string(character)
 	}
+
+	if len(temp) > 1 {
+		result = append(result, temp)
+	}
+
 	return result
 }
