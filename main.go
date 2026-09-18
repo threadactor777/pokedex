@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -17,9 +18,17 @@ func main() {
 
 		// Scan tokens
 		if scanner.Scan() {
-			input := cleanInput(scanner.Text())
-			// Print first word
-			fmt.Println("Your command was:", input[0])
+			input := strings.Join(cleanInput(scanner.Text()), "")
+
+			// Check if they want to exit
+			switch input {
+			case "exit":
+				commandExit()
+			case "help":
+				help()
+			default:
+				fmt.Printf("Unknown command")
+			}
 		}
 
 		if err := scanner.Err(); err != nil {
