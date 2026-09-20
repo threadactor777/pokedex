@@ -28,6 +28,8 @@ func repl(currentConfig *Config) {
 				help(currentConfig)
 			case "map":
 				commandMap(currentConfig)
+			case "mapb":
+				commandMapBack(currentConfig)
 			default:
 				fmt.Printf("Unknown command")
 			}
