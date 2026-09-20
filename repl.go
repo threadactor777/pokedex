@@ -6,13 +6,18 @@ import (
 	"strings"
 )
 
-type cliCommand struct {
-	name        string
-	description string
-	callback    func() error
+type Config struct {
+	commands map[string]CliCommand
 }
 
-var commands = map[string]cliCommand{
+type CliCommand struct {
+	name        string
+	description string
+	callback    func(*Config) error
+}
+
+/*
+var commands = map[string]CliCommand{
 	"exit": {
 		name:        "exit",
 		description: "Exit the Pokedex",
@@ -24,6 +29,7 @@ var commands = map[string]cliCommand{
 		callback:    help,
 	},
 }
+*/
 
 func cleanInput(text string) []string {
 	var result []string
@@ -46,13 +52,13 @@ func cleanInput(text string) []string {
 	return result
 }
 
-func commandExit() error {
+func commandExit(userConfig *Config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func help() error {
+func help(userConfig *Config) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println()

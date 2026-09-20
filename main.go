@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func main() {
+func repl(currentConfig *Config) {
 	// Create scanner
 	scanner := bufio.NewScanner(os.Stdin)
 
@@ -23,9 +23,9 @@ func main() {
 			// Check if they want to exit
 			switch input {
 			case "exit":
-				commandExit()
+				commandExit(currentConfig)
 			case "help":
-				help()
+				help(currentConfig)
 			default:
 				fmt.Printf("Unknown command")
 			}
@@ -36,4 +36,23 @@ func main() {
 		}
 
 	}
+}
+
+var userConfig = Config{
+	commands: map[string]CliCommand{
+		"exit": {
+			name:        "exit",
+			description: "Exit the Pokedex",
+			callback:    commandExit,
+		},
+		"help": {
+			name:        "help",
+			description: "Displays a help message",
+			callback:    help,
+		},
+	},
+}
+
+func main() {
+	repl(&userConfig)
 }
