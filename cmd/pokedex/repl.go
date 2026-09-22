@@ -86,7 +86,11 @@ func commandMap(userConfig *Config) error {
 func commandMapBack(userConfig *Config) error {
 
 	if userConfig.previous == "" {
-		fmt.Printf("You're already on the first page!")
+		fmt.Println("You're already on the first page!")
+		locationStruct := pokeapi.GetLocation("https://pokeapi.co/api/v2/location-area/?offset=0&limit=20")
+		for _, city := range locationStruct.Results {
+			fmt.Println(city.Name)
+		}
 		return nil
 	}
 
