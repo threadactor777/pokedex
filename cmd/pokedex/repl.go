@@ -49,10 +49,6 @@ func cleanInput(text string) []string {
 		temp = strings.ToLower(temp + string(character))
 	}
 
-	if len(temp) > 1 {
-		result = append(result, strings.ToLower(temp))
-	}
-
 	return result
 }
 
