@@ -8,9 +8,10 @@ import (
 )
 
 type Config struct {
-	commands map[string]CliCommand
-	next     string
-	previous string
+	pokeapiClient pokeapi.Client
+	commands      map[string]CliCommand
+	next          string
+	previous      string
 }
 
 type CliCommand struct {
@@ -71,7 +72,10 @@ func help(userConfig *Config) error {
 }
 
 func commandMap(userConfig *Config) error {
-	locationStruct := pokeapi.GetLocation(userConfig.next)
+	locationStruct, err := userConfig.pokeapiClient.GetLocation(userConfig.next)
+	if err != nil {
+		return err
+	}
 
 	userConfig.next = locationStruct.Next
 	userConfig.previous = locationStruct.Previous
@@ -87,14 +91,21 @@ func commandMapBack(userConfig *Config) error {
 
 	if userConfig.previous == "" {
 		fmt.Println("You're already on the first page!")
-		locationStruct := pokeapi.GetLocation("https://pokeapi.co/api/v2/location-area/?offset=0&limit=20")
+		locationStruct, err := userConfig.pokeapiClient.GetLocation("https://pokeapi.co/api/v2/location-area/?offset=0&limit=20")
+		if err != nil {
+			return err
+		}
+
 		for _, city := range locationStruct.Results {
 			fmt.Println(city.Name)
 		}
 		return nil
 	}
 
-	locationStruct := pokeapi.GetLocation(userConfig.previous)
+	locationStruct, err := userConfig.pokeapiClient.GetLocation(userConfig.previous)
+	if err != nil {
+		return nil
+	}
 
 	userConfig.next = locationStruct.Next
 	userConfig.previous = locationStruct.Previous

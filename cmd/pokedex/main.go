@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"pokedex/internal/pokeapi"
 	"strings"
+	"time"
 )
 
 func repl(currentConfig *Config) {
@@ -36,13 +38,14 @@ func repl(currentConfig *Config) {
 		}
 
 		if err := scanner.Err(); err != nil {
-			fmt.Errorf("Error:", err)
+			fmt.Printf("Error: %v", err)
 		}
 
 	}
 }
 
 var userConfig = Config{
+	pokeapiClient: pokeapi.NewClient(5 * time.Minute),
 	commands: map[string]CliCommand{
 		"exit": {
 			name:        "exit",
