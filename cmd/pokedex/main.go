@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"pokedex/internal/pokeapi"
-	"strings"
 	"time"
 )
 
@@ -20,21 +19,26 @@ func repl(currentConfig *Config) {
 
 		// Scan tokens
 		if scanner.Scan() {
-			input := strings.Join(cleanInput(scanner.Text()), "")
+			input := cleanInput(scanner.Text())
 
-			// Check if they want to exit
-			switch input {
-			case "exit":
-				commandExit(currentConfig)
-			case "help":
-				help(currentConfig)
-			case "map":
-				commandMap(currentConfig)
-			case "mapb":
-				commandMapBack(currentConfig)
-			default:
-				fmt.Printf("Unknown command")
+			if len(input) <= 1 {
+				// Check if they want to exit
+				switch input[0] {
+				case "exit":
+					commandExit(currentConfig)
+				case "help":
+					help(currentConfig)
+				case "map":
+					commandMap(currentConfig)
+				case "mapb":
+					commandMapBack(currentConfig)
+				default:
+					fmt.Printf("Unknown command")
+				}
+			} else {
+				commandExplore(currentConfig, input[1])
 			}
+
 		}
 
 		if err := scanner.Err(); err != nil {
@@ -66,6 +70,11 @@ var userConfig = Config{
 			name:        "mapb",
 			description: "Displays the previous 20 location areas in the Pokemon world",
 			callback:    commandMapBack,
+		},
+		"explore": {
+			name:        "explore",
+			description: "Displays the pokemon in a specific area",
+			callback:    commandExplore,
 		},
 	},
 	next:     "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",

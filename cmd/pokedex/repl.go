@@ -17,7 +17,7 @@ type Config struct {
 type CliCommand struct {
 	name        string
 	description string
-	callback    func(*Config) error
+	callback    func(*Config, ...string) error
 }
 
 /*
@@ -35,6 +35,7 @@ var commands = map[string]CliCommand{
 }
 */
 
+/*
 func cleanInput(text string) []string {
 	var result []string
 	var temp string
@@ -51,14 +52,20 @@ func cleanInput(text string) []string {
 
 	return result
 }
+*/
 
-func commandExit(userConfig *Config) error {
+func cleanInput(text string) []string {
+	words := strings.Fields(text)
+	return words
+}
+
+func commandExit(userConfig *Config, paramter ...string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func help(userConfig *Config) error {
+func help(userConfig *Config, parameter ...string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:")
 	fmt.Println()
@@ -67,7 +74,7 @@ func help(userConfig *Config) error {
 	return nil
 }
 
-func commandMap(userConfig *Config) error {
+func commandMap(userConfig *Config, parameter ...string) error {
 	locationStruct, err := userConfig.pokeapiClient.GetLocation(userConfig.next)
 	if err != nil {
 		return err
@@ -83,7 +90,7 @@ func commandMap(userConfig *Config) error {
 	return nil
 }
 
-func commandMapBack(userConfig *Config) error {
+func commandMapBack(userConfig *Config, parameter ...string) error {
 
 	if userConfig.previous == "" {
 		fmt.Println("You're already on the first page!")
@@ -110,5 +117,9 @@ func commandMapBack(userConfig *Config) error {
 		fmt.Println(city.Name)
 	}
 
+	return nil
+}
+
+func commandExplore(userConfig *Config, parameter ...string) error {
 	return nil
 }
