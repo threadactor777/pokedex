@@ -12,6 +12,7 @@ type Config struct {
 	commands      map[string]CliCommand
 	next          string
 	previous      string
+	areaBase      string
 }
 
 type CliCommand struct {
@@ -107,7 +108,7 @@ func commandMapBack(userConfig *Config, parameter ...string) error {
 
 	locationStruct, err := userConfig.pokeapiClient.GetLocation(userConfig.previous)
 	if err != nil {
-		return nil
+		return fmt.Errorf("Failed to get Location!")
 	}
 
 	userConfig.next = locationStruct.Next
@@ -121,5 +122,17 @@ func commandMapBack(userConfig *Config, parameter ...string) error {
 }
 
 func commandExplore(userConfig *Config, parameter ...string) error {
+	specificLocationStruct, err := userConfig.pokeapiClient.GetSpecificLocation(userConfig.areaBase + parameter[0])
+	if err != nil {
+		return fmt.Errorf("Failed to get Specific Location!")
+	}
+
+	fmt.Println("Exploring", parameter[0], "!")
+	fmt.Println("Found:")
+
+	for _, pokemon := range specificLocationStruct.PokemonEncounters {
+		fmt.Println("-", pokemon.Pokemon.Name)
+	}
+
 	return nil
 }

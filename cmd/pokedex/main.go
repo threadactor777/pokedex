@@ -21,6 +21,13 @@ func repl(currentConfig *Config) {
 		if scanner.Scan() {
 			input := cleanInput(scanner.Text())
 
+			/* Need to create function to handle blank entry
+			-
+			-
+			-
+			-
+			*/
+
 			if len(input) <= 1 {
 				// Check if they want to exit
 				switch input[0] {
@@ -33,7 +40,7 @@ func repl(currentConfig *Config) {
 				case "mapb":
 					commandMapBack(currentConfig)
 				default:
-					fmt.Printf("Unknown command")
+					fmt.Println("Unknown command")
 				}
 			} else {
 				commandExplore(currentConfig, input[1])
@@ -79,6 +86,7 @@ var userConfig = Config{
 	},
 	next:     "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
 	previous: "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
+	areaBase: "https://pokeapi.co/api/v2/location-area/",
 }
 
 func main() {
