@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"os"
 	"pokedex/internal/pokeapi"
 	"strings"
@@ -13,6 +14,7 @@ type Config struct {
 	next          string
 	previous      string
 	areaBase      string
+	pokemon       map[string]pokeapi.PokemonInformation
 }
 
 type CliCommand struct {
@@ -20,40 +22,6 @@ type CliCommand struct {
 	description string
 	callback    func(*Config, ...string) error
 }
-
-/*
-var commands = map[string]CliCommand{
-	"exit": {
-		name:        "exit",
-		description: "Exit the Pokedex",
-		callback:    commandExit,
-	},
-	"help": {
-		name:        "help",
-		description: "Displays a help message",
-		callback:    help,
-	},
-}
-*/
-
-/*
-func cleanInput(text string) []string {
-	var result []string
-	var temp string
-	for _, character := range text {
-		if string(character) == " " {
-			if len(temp) > 1 {
-				result = append(result, strings.ToLower(temp))
-				temp = ""
-			}
-			continue
-		}
-		temp = strings.ToLower(temp + string(character))
-	}
-
-	return result
-}
-*/
 
 func cleanInput(text string) []string {
 	words := strings.Fields(text)
@@ -134,5 +102,57 @@ func commandExplore(userConfig *Config, parameter ...string) error {
 		fmt.Println("-", pokemon.Pokemon.Name)
 	}
 
+	return nil
+}
+
+func commandCatch(userConfig *Config, parameter ...string) error {
+	// Logic for checking location specific encounters (threaded) - not needed right now
+	/*
+		specificLocationStruct, err := userConfig.pokeapiClient.GetSpecificLocation(userConfig.areaBase + parameter[0])
+		if err != nil {
+			return fmt.Errorf("Failed to get Specific Location information to see Pokemon in area!")
+		}
+
+		// Check if pokemon exists in the location
+		for _, encounter := range specificLocationStruct.PokemonEncounters {
+			if encounter.Pokemon.Name == parameter[0] {
+				pokemonInformationStruct, err := userConfig.pokeapiClient.GetPokemonInformation(parameter[0])
+				if err != nil {
+					fmt.Println("Error parsing encounters for area!")
+					return err
+				}
+				catchProbability := rand.Intn(pokemonInformationStruct.BaseExperience)
+				catchRoll := rand.Intn(pokemonInformationStruct.BaseExperience)
+
+				fmt.Println("Throwing a Pokeball at", parameter[0], "...")
+
+				if catchProbability == catchRoll {
+					fmt.Println(parameter[0], "was caught!")
+					userConfig.pokemon[parameter[0]] = pokemonInformationStruct
+				}
+
+			} else {
+				fmt.Println(parameter[0], "escaped!")
+			}
+		}
+		return nil
+	*/
+	pokemonInformationStruct, err := userConfig.pokeapiClient.GetPokemonInformation("https://pokeapi.co/api/v2/pokemon/" + parameter[0])
+	if err != nil {
+		fmt.Println("Error parsing encounters for area!")
+		return err
+	}
+
+	catchProbability := rand.Intn(pokemonInformationStruct.BaseExperience) / 10
+	catchRoll := rand.Intn(pokemonInformationStruct.BaseExperience) / 10
+
+	fmt.Printf("Throwing a Pokeball at %v...\n", parameter[0])
+
+	if catchProbability == catchRoll {
+		fmt.Println(parameter[0], "was caught!")
+		userConfig.pokemon[parameter[0]] = pokemonInformationStruct
+	} else {
+		fmt.Println(parameter[0], "escaped!")
+	}
 	return nil
 }
