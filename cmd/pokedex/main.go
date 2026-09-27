@@ -34,6 +34,8 @@ func repl(currentConfig *Config) {
 					commandExplore(currentConfig, input[1])
 				case "inspect":
 					commandInspect(currentConfig, input[1])
+				default:
+					fmt.Println("Uknown Combination/Command")
 				}
 				continue
 			}
@@ -52,6 +54,8 @@ func repl(currentConfig *Config) {
 				fmt.Println("No Location Specified!")
 			case "inspect":
 				fmt.Println("No Pokemon Specified")
+			case "pokedex":
+				commandPokedex(currentConfig)
 			default:
 				fmt.Println("Unknown command")
 			}
@@ -101,6 +105,11 @@ var userConfig = Config{
 			name:        "inspect",
 			description: "Displays pokemon stats",
 			callback:    commandInspect,
+		},
+		"pokedex": {
+			name:        "pokedex",
+			description: "Displays any caught pokemon",
+			callback:    commandPokedex,
 		},
 	},
 	next:       "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",

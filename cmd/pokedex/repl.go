@@ -170,3 +170,14 @@ func commandInspect(userConfig *Config, parameter ...string) error {
 	}
 	return nil
 }
+
+func commandPokedex(userConfig *Config, parameter ...string) error {
+	fmt.Println("Your Pokedex:")
+	if len(userConfig.pokemon) == 0 {
+		fmt.Println("You have no pokemon!")
+	}
+	for value := range userConfig.pokemon {
+		fmt.Println("  ", value)
+	}
+	return nil
+}
