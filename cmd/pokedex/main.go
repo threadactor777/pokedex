@@ -21,14 +21,6 @@ func repl(currentConfig *Config) {
 		if scanner.Scan() {
 			input := cleanInput(scanner.Text())
 
-			/* Need to create function to handle blank entry
-			-
-			-
-			-
-			-
-			*/
-
-			// Check if they want to exit
 			if len(input) == 0 {
 				fmt.Println("You didnt enter anything!")
 				continue
@@ -40,6 +32,8 @@ func repl(currentConfig *Config) {
 					commandCatch(currentConfig, input[1])
 				case "explore":
 					commandExplore(currentConfig, input[1])
+				case "inspect":
+					commandInspect(currentConfig, input[1])
 				}
 				continue
 			}
@@ -56,6 +50,8 @@ func repl(currentConfig *Config) {
 				fmt.Println("No Pokemon Specified!")
 			case "explore":
 				fmt.Println("No Location Specified!")
+			case "inspect":
+				fmt.Println("No Pokemon Specified")
 			default:
 				fmt.Println("Unknown command")
 			}
@@ -101,12 +97,17 @@ var userConfig = Config{
 			description: "Attempts to cath an encountered pokemon",
 			callback:    commandCatch,
 		},
+		"inspect": {
+			name:        "inspect",
+			description: "Displays pokemon stats",
+			callback:    commandInspect,
+		},
 	},
-	next:     "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
-	previous: "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
-	areaBase: "https://pokeapi.co/api/v2/location-area/",
-	pokemon:  map[string]pokeapi.PokemonInformation{},
-	//need to initialize above?????
+	next:       "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
+	previous:   "https://pokeapi.co/api/v2/location-area/?offset=0&limit=20",
+	areaBase:   "https://pokeapi.co/api/v2/location-area/",
+	pokemon:    map[string]pokeapi.PokemonInformation{},
+	encounters: []string{},
 }
 
 func main() {
